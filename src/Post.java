@@ -49,4 +49,3 @@ public class Post {
         System.out.println("Post -> Content: \"" + content + "\", likes: " + likeCount + ", published: " + isPublished);
     }
 }
-
