@@ -38,6 +38,4 @@ public class Profile {
     public int compareFollowers(Profile other) {
         return Integer.compare(this.followersCount, other.followersCount);
     }
-
-
 }
