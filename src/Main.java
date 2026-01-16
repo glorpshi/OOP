@@ -50,5 +50,37 @@ public class Main {
         for (Post p : published) {
             p.printInfo(); // Will call VideoPost.printInfo() for the video
         }
+
+        System.out.println("\n--------------------------------------------------");
+        System.out.println("=== DATABASE OPERATIONS ===");
+
+        DBHandler dbHandler = new DBHandler();
+
+        // insert
+        System.out.println("\n-> Saving users to PostgreSQL...");
+        dbHandler.addProfile(profile1); // User1867003201
+        dbHandler.addProfile(profile3); // FamousStar
+
+        // read
+        System.out.println("\n-> Reading profiles from Database:");
+        List<Profile> dbProfiles = dbHandler.getAllProfiles();
+        for (Profile p : dbProfiles) {
+            System.out.println("[DB] " + p.toString());
+        }
+
+        // update
+        System.out.println("\n-> Updating 'FamousStar' in DB (New followers count: 25000)...");
+        dbHandler.updateFollowers("FamousStar", 25000);
+
+        // delete
+        System.out.println("\n-> Deleting 'User1867003201' from DB...");
+        dbHandler.deleteProfile("User1867003201");
+
+        // final check
+        System.out.println("\n-> Final DB State:");
+        List<Profile> finalProfiles = dbHandler.getAllProfiles();
+        for (Profile p : finalProfiles) {
+            System.out.println("[DB] " + p.toString());
+        }
     }
 }
