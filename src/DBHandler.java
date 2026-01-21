@@ -3,9 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBHandler {
-    private static final String URL = "jdbc:postgresql://localhost:5432/social_network_db";
+    private static final String URL = "jdbc:postgresql://localhost:5432/postgres";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "Arsen17796460";
+    private static final String PASSWORD = "9LLDTBKW8CNN";
 
     // connection check method
     public Connection connect() {
