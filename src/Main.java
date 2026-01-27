@@ -1,109 +1,46 @@
+import io.javalin.Javalin;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // input scan
-        Scanner scanner = new Scanner(System.in);
 
         DBHandler dbHandler = new DBHandler();
 
-        System.out.println("Social Network DB Manager");
+        Javalin app = Javalin.create().start(7000);
 
-        boolean running = true;
+        System.out.println("Social Network API is running on http://localhost:7000");
 
-        while (running) {
-            printMenu();
 
-            System.out.print("Enter your choice: ");
-            int choice = -1;
+        app.get("/profiles", ctx -> {
+            List<Profile> profiles = dbHandler.getAllProfiles();
+            ctx.json(profiles); // Автоматически превращает List<Profile> в JSON
+        });
 
-            if (scanner.hasNextInt()) {
-                choice = scanner.nextInt();
-                scanner.nextLine();
-            } else {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine();
-                continue;
-            }
+        app.post("/profiles", ctx -> {
+            Profile newProfile = ctx.bodyAsClass(Profile.class);
 
-            switch (choice) {
-                case 1:
-                    // INSERT NEW PROFILE
-                    System.out.println("\n--- Add New Profile ---");
-                    System.out.print("Enter username: ");
-                    String nameToAdd = scanner.nextLine();
+            dbHandler.addProfile(newProfile);
 
-                    System.out.print("Enter followers count: ");
-                    int followersToAdd = 0;
-                    if(scanner.hasNextInt()) {
-                        followersToAdd = scanner.nextInt();
-                        scanner.nextLine();
-                    }
+            ctx.status(201); // Код 201 означает "Created" (Успешно создано)
+            ctx.result("Profile created");
+        });
 
-                    Profile newProfile = new Profile(nameToAdd, followersToAdd);
-                    dbHandler.addProfile(newProfile);
-                    break;
+        app.put("/profiles/{username}", ctx -> {
+            String username = ctx.pathParam("username"); // Берем имя из ссылки
 
-                case 2:
-                    // SELECT ALL PROFILES
-                    System.out.println("\n--- All Profiles from DB ---");
-                    List<Profile> profiles = dbHandler.getAllProfiles();
-                    if (profiles.isEmpty()) {
-                        System.out.println("Database is empty.");
-                    } else {
-                        for (Profile p : profiles) {
-                            System.out.println(p.toString());
-                        }
-                    }
-                    break;
+            Profile body = ctx.bodyAsClass(Profile.class);
 
-                case 3:
-                    // UPDATE PROFILE
-                    System.out.println("\n--- Update Followers Count ---");
-                    System.out.print("Enter username to update: ");
-                    String nameToUpdate = scanner.nextLine();
+            dbHandler.updateFollowers(username, body.getFollowersCount());
 
-                    System.out.print("Enter new followers count: ");
-                    int newCount = 0;
-                    if(scanner.hasNextInt()) {
-                        newCount = scanner.nextInt();
-                        scanner.nextLine();
-                    }
+            ctx.result("Followers updated for " + username);
+        });
 
-                    dbHandler.updateFollowers(nameToUpdate, newCount);
-                    break;
+        app.delete("/profiles/{username}", ctx -> {
+            String username = ctx.pathParam("username"); // Берем имя из ссылки
 
-                case 4:
-                    // DELETE PROFILE
-                    System.out.println("\n--- Delete Profile ---");
-                    System.out.print("Enter username to delete: ");
-                    String nameToDelete = scanner.nextLine();
+            dbHandler.deleteProfile(username);
 
-                    dbHandler.deleteProfile(nameToDelete);
-                    break;
-
-                case 0:
-                    // KILL PROGRAM
-                    System.out.println("Exiting program. Goodbye!");
-                    running = false;
-                    break;
-
-                default:
-                    System.out.println("Unknown command. Please try again.");
-            }
-            System.out.println("----------------------------------------");
-        }
-
-        scanner.close();
-    }
-
-    private static void printMenu() {
-        System.out.println("\nSELECT ACTION:");
-        System.out.println("1. Add Profile (INSERT)");
-        System.out.println("2. Show All Profiles (SELECT)");
-        System.out.println("3. Update Followers (UPDATE)");
-        System.out.println("4. Delete Profile (DELETE)");
-        System.out.println("0. Exit");
+            ctx.result("Profile " + username + " deleted");
+        });
     }
 }
