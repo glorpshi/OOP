@@ -1,8 +1,12 @@
+package org.example.domain;
+
 public class VideoPost extends Post {
     private int durationSeconds;
 
     public VideoPost(String content, int likeCount, boolean isPublished, int durationSeconds) {
-        super(content, likeCount, isPublished);
+        super(content,
+                likeCount,
+                isPublished);
         this.durationSeconds = durationSeconds;
     }
 
@@ -16,10 +20,14 @@ public class VideoPost extends Post {
 
     // polymorphism
     public void printInfo() {
-        System.out.println("VideoPost -> Content: \"" + getContent() + "\", likes: " + getLikeCount() + ", duration: " + durationSeconds + "s");
+        System.out.println("org.example.domain.VideoPost -> Content: \"" + getContent() + "\", likes: " + getLikeCount() + ", duration: " + durationSeconds + "s");
     }
 
     public String toString() {
-        return "VideoPost{content='" + getContent() + "', likes=" + getLikeCount() + ", duration=" + durationSeconds + "}";
+        return "org.example.domain.VideoPost{content='" + getContent() + "', likes=" + getLikeCount() + ", duration=" + durationSeconds + "}";
+    }
+
+    private String getLikeCount() {
+        return null;
     }
 }
