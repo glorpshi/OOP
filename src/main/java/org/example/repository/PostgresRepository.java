@@ -33,6 +33,7 @@ public class PostgresRepository implements SocialRepository {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
+
     @Override
     public List<Profile> getAllProfiles() {
         List<Profile> list = new ArrayList<>();
