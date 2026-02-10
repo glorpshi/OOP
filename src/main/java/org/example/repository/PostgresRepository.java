@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PostgresRepository implements SocialRepository {
 
-    private final String url = "jdbc:postgresql://localhost:5432/social_network_db";
+    private final String url = "jdbc:postgresql://localhost:5432/postgres";
     private final String user = "postgres";
     private final String pass = "9LLDTBKW8CNN";
 
